@@ -5,6 +5,7 @@ import com.example.blogapis.exceptions.ResourceNotFoundException;
 import com.example.blogapis.payloads.UserDTO;
 import com.example.blogapis.repository.UserRepo;
 import com.example.blogapis.services.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepo userRepo;
 
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public UserDTO createUser(UserDTO userDTO) {
@@ -71,23 +74,11 @@ public class UserServiceImpl implements UserService {
     }
 
     public Users dtoToUser(UserDTO userDTO){
-            Users user = new Users();
-            user.setId(userDTO.getId());
-        user.setName(userDTO.getName());
-        user.setEmail(userDTO.getEmail());
-        user.setAbout(userDTO.getAbout());
-        user.setPassword(userDTO.getPassword());
-        return user;
+            return this.modelMapper.map(userDTO, Users.class);
     }
 
     public UserDTO userToDTO(Users users){
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(users.getId());
-        userDTO.setName(users.getName());
-        userDTO.setEmail(users.getEmail());
-        userDTO.setAbout(users.getAbout());
-        userDTO.setPassword(users.getPassword());
-        return userDTO;
+        return this.modelMapper.map(users, UserDTO.class);
     }
 
 }
